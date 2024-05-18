@@ -18,12 +18,12 @@ io.on("connection", async (socket) => {
 
   if (user) {
     usersMap[socket.id] = user;
-    socket.broadcast.emit("users", usersMap);
+    io.emit("users", usersMap);
   }
 
-  socket.on("sendMessage", (msg) => {
-    console.log("message", msg);
-    io.to(msg.to).emit("newMessage", msg.text);
+  socket.on("sendMessage", ({ to, text }) => {
+    console.log("message", text);
+    io.to(to).emit("newMessage", { from: socket.id, text });
   });
 
   socket.on("disconnect", () => {
