@@ -1,8 +1,20 @@
 import { create } from "zustand";
-export const useAuthStore = create((set) => ({
-  user: null,
-  login: (user) => set({ user }),
-  logout: () => set({ user: null }),
-}));
+import { persist } from "zustand/middleware";
+
+const useAuthStore = create(
+  persist(
+    (set) => ({
+      user: null,
+      login: (user) => set({ user }),
+      logout: () => set({ user: null }),
+    }),
+    {
+      name: "authStore",
+      partialize: (state) => ({
+        user: state.user,
+      }),
+    }
+  )
+);
 
 export default useAuthStore;
